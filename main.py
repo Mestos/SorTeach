@@ -8,6 +8,8 @@ from pygame.sprite import RenderUpdates
 Branco = (255, 255, 255)
 AMARELO = (255, 255, 0)
 PRETO = (0, 0, 0)
+VERMELHO = (255, 0, 0)
+VERDE = (0, 255, 0)
 pygame.display.set_caption("SorTeach.exe")
 
 
@@ -62,7 +64,7 @@ class UIElement(Sprite):
 
 
 class Player:
-    def __init__(self, score=0, lives=3, current_level=-1):
+    def __init__(self, score=0, lives=3, current_level=0):
         self.score = score
         self.lives = lives
         self.current_level = current_level
@@ -82,20 +84,38 @@ def main():
             game_state = study_mode(screen)
 
         if game_state == GameState.MODE:
-            player.current_level = -1
+            player.current_level = 0
             game_state = study_mode(screen)
 
-        if game_state == GameState.NEXT_LEVELT:
-            player.current_level += 1
-            game_state = play_levelt(screen, player)
-
         if game_state == GameState.NEXT_LEVELH:
-            player.current_level += 1
+            if player.current_level < 10:
+                player.current_level += 1
+            else:
+                player.current_level = player.current_level - 9
             game_state = play_levelh(screen, player)
 
+        if game_state == GameState.NEXT_LEVELT:
+            if player.current_level < 10:
+                player.current_level += 1
+            else:
+                player.current_level = player.current_level - 9
+            game_state = play_levelt(screen, player)
+
         if game_state == GameState.NEXT_LEVELQ:
-            player.current_level += 1
+            if player.current_level < 10:
+                player.current_level += 1
+            else:
+                player.current_level = player.current_level - 9
             game_state = play_levelq(screen, player)
+
+        if game_state == GameState.PLAYT:
+            game_state = level_type(screen, player)
+
+        if game_state == GameState.PLAYH:
+            game_state = level_type(screen, player)
+
+        if game_state == GameState.PLAYQ:
+            game_state = level_type(screen, player)
 
         if game_state == GameState.QUIT:
             pygame.quit()
@@ -132,168 +152,90 @@ def title_screen(screen):
 
 
 def play_levelt(screen, player):
-    if player.current_level < 10:
-        return_btn = UIElement(
-            center_position=(140, 570),
-            font_size=20,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text="Modo de ensino",
-            action=GameState.MODE,
-        )
-        nextlevel_btn = UIElement(
-            center_position=(400, 400),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Proximo Nivel ({player.current_level + 1})",
-            action=GameState.NEXT_LEVELT,
-        )
-        playlevel_btn = UIElement(
-            center_position=(400, 200),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Iniciar Nivel",
-            action=GameState.PLAYT,
-        )
-    else:
-        return_btn = UIElement(
-            center_position=(140, 570),
-            font_size=20,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text="Modo de ensino",
-            action=GameState.MODE,
-        )
-        nextlevel_btn = UIElement(
-            center_position=(400, 400),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Proximo Nivel ({player.current_level -9})",
-            action=GameState.NEXT_LEVELT,
-        )
-        playlevel_btn = UIElement(
-            center_position=(400, 200),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Iniciar Nivel",
-            action=GameState.PLAYT,
-        )
+    return_btn = UIElement(
+        center_position=(140, 570),
+        font_size=20,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text="Modo de ensino",
+        action=GameState.MODE,
+    )
+    playlevelt_btn = UIElement(
+        center_position=(400, 200),
+        font_size=30,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text=f"Iniciar Nivel",
+        action=GameState.PLAYT,
+    )
+    nextlevel_btn = UIElement(
+        center_position=(400, 400),
+        font_size=30,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text=f"Proximo Nivel ({player.current_level})",
+        action=GameState.NEXT_LEVELT,
+    )
 
-    buttons = RenderUpdates(return_btn, nextlevel_btn, playlevel_btn)
+    buttons = RenderUpdates(return_btn, nextlevel_btn, playlevelt_btn)
     return game_loop(screen, buttons)
 
 
 def play_levelh(screen, player):
-    if player.current_level < 10:
-        return_btn = UIElement(
-            center_position=(140, 570),
-            font_size=20,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text="Modo de ensino",
-            action=GameState.MODE,
-        )
-        nextlevel_btn = UIElement(
-            center_position=(400, 400),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Proximo Nivel ({player.current_level + 1})",
-            action=GameState.NEXT_LEVELH,
-        )
-        playlevel_btn = UIElement(
-            center_position=(400, 200),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Iniciar Nivel",
-            action=GameState.PLAYH,
-        )
-    else:
-        return_btn = UIElement(
-            center_position=(140, 570),
-            font_size=20,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text="Modo de ensino",
-            action=GameState.MODE,
-        )
-        nextlevel_btn = UIElement(
-            center_position=(400, 400),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Proximo Nivel ({player.current_level -9})",
-            action=GameState.NEXT_LEVELH,
-        )
-        playlevel_btn = UIElement(
-            center_position=(400, 200),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Iniciar Nivel",
-            action=GameState.PLAYH,
-        )
+    return_btn = UIElement(
+        center_position=(140, 570),
+        font_size=20,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text="Modo de ensino",
+        action=GameState.MODE,
+    )
+    nextlevel_btn = UIElement(
+        center_position=(400, 400),
+        font_size=30,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text=f"Proximo Nivel ({player.current_level})",
+        action=GameState.NEXT_LEVELH,
+    )
+    playlevel_btn = UIElement(
+        center_position=(400, 200),
+        font_size=30,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text=f"Iniciar Nivel",
+        action=GameState.PLAYH,
+    )
 
     buttons = RenderUpdates(return_btn, nextlevel_btn, playlevel_btn)
     return game_loop(screen, buttons)
 
 
 def play_levelq(screen, player):
-    if player.current_level < 10:
-        return_btn = UIElement(
-            center_position=(140, 570),
-            font_size=20,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text="Modo de ensino",
-            action=GameState.MODE,
-        )
-        nextlevel_btn = UIElement(
-            center_position=(400, 400),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Proximo Nivel ({player.current_level + 1})",
-            action=GameState.NEXT_LEVELQ,
-        )
-        playlevel_btn = UIElement(
-            center_position=(400, 200),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Iniciar Nivel",
-            action=GameState.PLAYQ,
-        )
-    else:
-        return_btn = UIElement(
-            center_position=(140, 570),
-            font_size=20,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text="Modo de ensino",
-            action=GameState.MODE,
-        )
-        nextlevel_btn = UIElement(
-            center_position=(400, 400),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Proximo Nivel ({player.current_level -9})",
-            action=GameState.NEXT_LEVELQ,
-        )
-        playlevel_btn = UIElement(
-            center_position=(400, 200),
-            font_size=30,
-            bg_rgb=PRETO,
-            text_rgb=Branco,
-            text=f"Iniciar Nivel",
-            action=GameState.PLAYQ,
-        )
+    return_btn = UIElement(
+        center_position=(140, 570),
+        font_size=20,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text="Modo de ensino",
+        action=GameState.MODE,
+    )
+    nextlevel_btn = UIElement(
+        center_position=(400, 400),
+        font_size=30,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text=f"Proximo Nivel ({player.current_level})",
+        action=GameState.NEXT_LEVELQ,
+    )
+    playlevel_btn = UIElement(
+        center_position=(400, 200),
+        font_size=30,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text=f"Iniciar Nivel",
+        action=GameState.PLAYQ,
+    )
 
     buttons = RenderUpdates(return_btn, nextlevel_btn, playlevel_btn)
     return game_loop(screen, buttons)
@@ -336,6 +278,36 @@ def study_mode(screen):
 
     buttons = RenderUpdates(return_btn, heapsort_btn, quicksort_btn, tutorial_btn)
     return game_loop(screen, buttons)
+
+
+def level_type(screen, player):
+    if player.current_level <= 5:
+        name_btn = UIElement(
+            center_position=(400, 50),
+            font_size=50,
+            bg_rgb=PRETO,
+            text_rgb=VERDE,
+            text="Facil",
+        )
+    elif player.current_level <= 8:
+        name_btn = UIElement(
+            center_position=(400, 50),
+            font_size=50,
+            bg_rgb=PRETO,
+            text_rgb=AMARELO,
+            text="Medio",
+        )
+    else:
+        name_btn = UIElement(
+            center_position=(400, 50),
+            font_size=50,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Dificil",
+        )
+    buttons = RenderUpdates(name_btn)
+    return game_loop(screen, buttons)
+
 
 
 def game_loop(screen, buttons):
