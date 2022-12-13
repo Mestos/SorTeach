@@ -64,15 +64,13 @@ class UIElement(Sprite):
 
 
 class Player:
-    def __init__(self, score=0, lives=3, current_level=0):
-        self.score = score
-        self.lives = lives
+    def __init__(self, current_level=0):
         self.current_level = current_level
 
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode((1200, 600))
     game_state = GameState.TITLE
 
     while True:
@@ -84,14 +82,21 @@ def main():
             game_state = GameState.NEXT_LEVEL
 
         if game_state == GameState.NEXT_LEVEL:
-            if player.current_level < 10:
+            if player.current_level < 6:
                 player.current_level += 1
+
             else:
-                player.current_level = player.current_level - 9
+                player.current_level = player.current_level - 5
             game_state = play_level(screen, player)
 
         if game_state == GameState.PLAY:
             game_state = level_type(screen, player)
+
+        if game_state == GameState.COMPLETE:
+            game_state = complete(screen)
+
+        if game_state == GameState.FAILED:
+            game_state = fail(screen)
 
         if game_state == GameState.QUIT:
             pygame.quit()
@@ -100,23 +105,23 @@ def main():
 
 def title_screen(screen):
     name_btn = UIElement(
-        center_position=(400, 150),
-        font_size=30,
+        center_position=(590, 150),
+        font_size=50,
         bg_rgb=PRETO,
         text_rgb=AMARELO,
         text="SorTeach",
     )
     start_btn = UIElement(
-        center_position=(400, 300),
-        font_size=30,
+        center_position=(590, 300),
+        font_size=40,
         bg_rgb=PRETO,
         text_rgb=Branco,
         text="Iniciar",
         action=GameState.NEWGAME,
     )
     quit_btn = UIElement(
-        center_position=(400, 350),
-        font_size=30,
+        center_position=(590, 400),
+        font_size=40,
         bg_rgb=PRETO,
         text_rgb=Branco,
         text="Sair",
@@ -128,23 +133,23 @@ def title_screen(screen):
 
 def play_level(screen, player):
     return_btn = UIElement(
-        center_position=(50, 570),
-        font_size=30,
+        center_position=(100, 550),
+        font_size=40,
         bg_rgb=PRETO,
         text_rgb=Branco,
         text="Menu",
-        action=GameState.NEWGAME,
+        action=GameState.TITLE,
     )
     playlevelt_btn = UIElement(
-        center_position=(400, 200),
-        font_size=30,
+        center_position=(600, 200),
+        font_size=50,
         bg_rgb=PRETO,
         text_rgb=Branco,
         text=f"Iniciar Nivel",
         action=GameState.PLAY,
     )
     nextlevel_btn = UIElement(
-        center_position=(400, 400),
+        center_position=(600, 450),
         font_size=30,
         bg_rgb=PRETO,
         text_rgb=Branco,
@@ -156,17 +161,17 @@ def play_level(screen, player):
 
 
 def level_type(screen, player):
-    if player.current_level <= 5:
+    if player.current_level <= 3:
         name_btn = UIElement(
-            center_position=(400, 50),
+            center_position=(600, 50),
             font_size=50,
             bg_rgb=PRETO,
             text_rgb=VERDE,
             text="Facil",
         )
-    elif player.current_level <= 8:
+    elif player.current_level <= 5:
         name_btn = UIElement(
-            center_position=(400, 50),
+            center_position=(600, 50),
             font_size=50,
             bg_rgb=PRETO,
             text_rgb=AMARELO,
@@ -174,29 +179,249 @@ def level_type(screen, player):
         )
     else:
         name_btn = UIElement(
-            center_position=(400, 50),
+            center_position=(600, 50),
             font_size=50,
             bg_rgb=PRETO,
             text_rgb=VERMELHO,
             text="Dificil",
         )
-    rcd_btn = UIElement(
-        center_position=(100, 100),
-        font_size=30,
+    if player.current_level == 1:
+        yes_btn = UIElement(
+            center_position=(200, 410),
+            font_size=50,
+            bg_rgb=PRETO,
+            text_rgb=VERDE,
+            text="Sim",
+            action=GameState.COMPLETE
+        )
+        question_btn = UIElement(
+            center_position=(600, 300),
+            font_size=27,
+            bg_rgb=PRETO,
+            text_rgb=Branco,
+            text="Uma árvore binária possui no máximo 2 nós filhos de outro nó?",
+        )
+        no_btn = UIElement(
+            center_position=(800, 400),
+            font_size=50,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Nao",
+            action=GameState.FAILED
+        )
+    if player.current_level == 3:
+        no_btn = UIElement(
+            center_position=(820, 450),
+            font_size=50,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Nao",
+            action=GameState.COMPLETE
+        )
+        yes_btn = UIElement(
+            center_position=(400, 450),
+            font_size=50,
+            bg_rgb=PRETO,
+            text_rgb=VERDE,
+            text="Sim",
+            action=GameState.FAILED
+        )
+        question_btn = UIElement(
+            center_position=(600, 200),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=Branco,
+            text="Este vetor representa uma Heap?",
+        )
+        heap_btn = UIElement(
+            center_position=(600, 300),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=Branco,
+            text="[20 35 18 64 7 12 43 25 50]",
+        )
+    if player.current_level == 4:
+        question_btn = UIElement(
+            center_position=(600, 200),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=Branco,
+            text="Qual dos vetores abaixo representa uma Heap?",
+        )
+        op1_btn = UIElement(
+            center_position=(220, 250),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 1: [1 0 3 4 9 6]",
+            action=GameState.FAILED
+        )
+        op2_btn = UIElement(
+            center_position=(290, 300),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 2: [30 7 18 4 64 9 3 24]",
+            action=GameState.FAILED
+        )
+        op3_btn = UIElement(
+            center_position=(340, 350),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 3: [64 50 43 35 7 12 18 25 20]",
+            action=GameState.COMPLETE
+        )
+        op4_btn = UIElement(
+            center_position=(195, 400),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 4: [20 2 30 4]",
+            action=GameState.FAILED
+        )
+    if player.current_level == 6:
+        question_btn = UIElement(
+            center_position=(600, 200),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=Branco,
+            text="Qual a complexidade de construção de uma Heap?",
+        )
+        op1_btn = UIElement(
+            center_position=(300, 250),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 1: O(n)",
+            action=GameState.COMPLETE
+        )
+        op2_btn = UIElement(
+            center_position=(335, 300),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 2: O(log n)",
+            action=GameState.FAILED
+        )
+        op3_btn = UIElement(
+            center_position=(350, 350),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 3: O(n*log n)",
+            action=GameState.FAILED
+        )
+    if player.current_level == 2:
+        question_btn = UIElement(
+            center_position=(600, 200),
+            font_size=23,
+            bg_rgb=PRETO,
+            text_rgb=Branco,
+            text="Seja V[i] um elemento na posição i. Em uma Heap, V[i] > V[2i] e V[i] > V[2i + 1]",
+        )
+        t_btn = UIElement(
+            center_position=(820, 450),
+            font_size=40,
+            bg_rgb=PRETO,
+            text_rgb=VERDE,
+            text="Verdadeiro",
+            action=GameState.COMPLETE
+        )
+        fake_btn = UIElement(
+            center_position=(350, 450),
+            font_size=40,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Falso",
+            action=GameState.FAILED
+        )
+    if player.current_level == 5:
+        question_btn = UIElement(
+            center_position=(600, 200),
+            font_size=23,
+            bg_rgb=PRETO,
+            text_rgb=Branco,
+            text="Dada a Heap H: [95 60 78 39 28 66 70]. Mudando a prioridade de 66 para 98, H fica:",
+        )
+        op3_btn = UIElement(
+            center_position=(340, 350),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 3: [95 60 78 98 39 28 70]",
+            action=GameState.FAILED
+        )
+        op2_btn = UIElement(
+            center_position=(340, 300),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 2: [98 60 95 39 28 78 70]",
+            action=GameState.COMPLETE
+        )
+        op1_btn = UIElement(
+            center_position=(340, 250),
+            font_size=30,
+            bg_rgb=PRETO,
+            text_rgb=VERMELHO,
+            text="Opçao 1: [98 95 60 39 28 78 70]",
+            action=GameState.FAILED
+        )
+
+    if player.current_level == 3:
+        buttons = RenderUpdates(name_btn, yes_btn, question_btn, no_btn, heap_btn)
+    elif player.current_level == 1:
+        buttons = RenderUpdates(name_btn, yes_btn, question_btn, no_btn)
+    elif player.current_level == 4:
+        buttons = RenderUpdates(name_btn, question_btn, op1_btn, op2_btn, op3_btn, op4_btn)
+    elif player.current_level == 6:
+        buttons = RenderUpdates(name_btn, question_btn, op1_btn, op2_btn, op3_btn)
+    elif player.current_level == 2:
+        buttons = RenderUpdates(name_btn, question_btn, t_btn, fake_btn)
+    elif player.current_level == 5:
+        buttons = RenderUpdates(name_btn, question_btn, op1_btn, op2_btn, op3_btn)
+    return game_loop(screen, buttons)
+
+
+def complete(screen):
+    name_btn = UIElement(
+        center_position=(600, 200),
+        font_size=100,
+        bg_rgb=PRETO,
+        text_rgb=AMARELO,
+        text="Parabens",
+    )
+    back_btn = UIElement(
+        center_position=(100, 550),
+        font_size=40,
         bg_rgb=PRETO,
         text_rgb=Branco,
-        text="Recorde:",
+        text="Voltar",
+        action=GameState.NEWGAME
     )
-    problem = True
-    buttons = RenderUpdates(name_btn, rcd_btn)
-    return game_loop(screen, buttons, problem)
+    buttons = RenderUpdates(name_btn, back_btn)
+    return game_loop(screen, buttons)
 
 
-def prob1(screen):
-    font = pygame.font.SysFont('arial', 35, True, False)
-    mensagem = "Uma árvore binária possui no máximo 2 nós filhos de outro nó?"
-    pergunta = font.render(mensagem, True, (255, 0, 0))
-    screen.blit(pergunta, (10, 250))
+def fail(screen):
+    name_btn = UIElement(
+        center_position=(600, 200),
+        font_size=100,
+        bg_rgb=PRETO,
+        text_rgb=AMARELO,
+        text="Errou",
+    )
+    back_btn = UIElement(
+        center_position=(100, 550),
+        font_size=40,
+        bg_rgb=PRETO,
+        text_rgb=Branco,
+        text="Voltar",
+        action=GameState.NEWGAME
+    )
+    buttons = RenderUpdates(name_btn, back_btn)
+    return game_loop(screen, buttons)
 
 
 def game_loop(screen, buttons):
@@ -223,6 +448,8 @@ class GameState(Enum):
     NEWGAME = 1
     PLAY = 2
     NEXT_LEVEL = 3
+    COMPLETE = 4
+    FAILED = 5
 
 
 if __name__ == "__main__":
