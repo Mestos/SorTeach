@@ -69,6 +69,7 @@ class Player:
         self.lives = lives
         self.current_level = current_level
 
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
@@ -121,8 +122,7 @@ def title_screen(screen):
         text="Sair",
         action=GameState.QUIT,
     )
-
-    buttons = RenderUpdates(name_btn,start_btn, quit_btn)
+    buttons = RenderUpdates(name_btn, start_btn, quit_btn)
     return game_loop(screen, buttons)
 
 
@@ -151,7 +151,6 @@ def play_level(screen, player):
         text=f"Proximo Nivel ({player.current_level})",
         action=GameState.NEXT_LEVEL,
     )
-
     buttons = RenderUpdates(return_btn, nextlevel_btn, playlevelt_btn)
     return game_loop(screen, buttons)
 
@@ -188,8 +187,16 @@ def level_type(screen, player):
         text_rgb=Branco,
         text="Recorde:",
     )
+    problem = True
     buttons = RenderUpdates(name_btn, rcd_btn)
-    return game_loop(screen, buttons)
+    return game_loop(screen, buttons, problem)
+
+
+def prob1(screen):
+    font = pygame.font.SysFont('arial', 35, True, False)
+    mensagem = "Uma árvore binária possui no máximo 2 nós filhos de outro nó?"
+    pergunta = font.render(mensagem, True, (255, 0, 0))
+    screen.blit(pergunta, (10, 250))
 
 
 def game_loop(screen, buttons):
@@ -206,7 +213,6 @@ def game_loop(screen, buttons):
             ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
             if ui_action is not None:
                 return ui_action
-
         buttons.draw(screen)
         pygame.display.flip()
 
